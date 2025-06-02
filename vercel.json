@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/main.dart.js", "dest": "/main.dart.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}

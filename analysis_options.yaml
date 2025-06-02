@@ -1,0 +1,104 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at https://dart.dev/lints.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  rules:
+    # Style
+    prefer_single_quotes: true
+    always_use_package_imports: true
+    avoid_relative_lib_imports: true
+    avoid_relative_imports: true
+    avoid_unused_constructor_parameters: true
+    camel_case_types: true
+    constant_identifier_names: true
+    file_names: snake_case
+    no_duplicate_case_values: true
+    no_logic_in_create_state: true
+    prefer_typing_uninitialized_variables: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_conditional_assignment: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_final_fields: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_foreach: true
+    prefer_generic_function_type_aliases: true
+    prefer_if_null_operators: true
+    prefer_inlined_adds: true
+    prefer_interpolation_to_compose_strings: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_is_not_operator: true
+    prefer_null_aware_operators: true
+    prefer_spread_collections: true
+    sort_constructors_first: true
+    sort_unnamed_constructors_first: true
+    type_annotate_public_apis: true
+    unawaited_futures: true
+    unnecessary_brace_in_string_interps: true
+    unnecessary_constructor_name: true
+    unnecessary_lambdas: true
+    unnecessary_new: true
+    
+    # Documentation
+    public_member_api_docs: false
+    
+    # Disabled rules
+    avoid_print: false  # Useful for debugging
+    avoid_web_libraries_in_flutter: false  # Needed for web support
+    sort_pub_dependencies: false  # Let's keep dependencies in the order they were added
+    always_declare_return_types: false  # Sometimes it's cleaner to let the type be inferred
+    omit_local_variable_types: false  # Explicit types can improve readability
+    avoid_classes_with_only_static_members: false  # Common pattern in utils
+    avoid_private_typedef_functions: false  # Sometimes useful for complex types
+    avoid_function_literals_in_foreach_calls: false  # Not always applicable
+    avoid_returning_null_for_void: false  # Sometimes needed for callbacks
+    avoid_shadowing_type_parameters: false  # Can be too restrictive
+    avoid_unnecessary_containers: false  # Sometimes needed for animations
+    avoid_void_async: false  # Sometimes needed for event handlers
+    cascade_invocations: false  # Can make code less readable
+    depend_on_referenced_packages: false  # Can be too restrictive
+    library_names: false  # Not always needed for small projects
+    library_prefixes: false  # Not always needed for small projects
+    lines_longer_than_80_chars: false  # Sometimes necessary for readability
+    no_default_cases: false  # Sometimes default is not needed
+    no_leading_underscores_for_local_identifiers: false  # Common pattern for private members
+    no_runtimeType_toString: false  # Sometimes useful for debugging
+    prefer_adjacent_string_concatenation: false  # Not always more readable
+    prefer_asserts_in_initializer_lists: false  # Not always applicable
+    prefer_asserts_with_message: false  # Not always needed
+    prefer_collection_literals: false  # Not always more readable
+    prefer_expression_function_bodies: false  # Not always more readable
+    prefer_final_parameters: false  # Can be too restrictive
+    prefer_function_declarations_over_variables: false  # Not always more readable
+    prefer_initializing_formals: false  # Not always more readable
+    prefer_mixin: false  # Not always applicable
+    prefer_null_aware_method_calls: false  # Not always applicable
+    prefer_void_to_null: false  # Not always more readable
+    require_trailing_commas: false  # Can be too restrictive
+    sort_child_properties_last: false  # Not always more readable
+    type_init_formals: false  # Not always applicable
+    unnecessary_await_in_return: false  # Sometimes needed for consistency
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options

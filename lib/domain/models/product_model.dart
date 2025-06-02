@@ -7,8 +7,11 @@ class Product {
   final List<String> categories;
   final bool isNewArrival;
   final double? discount;
+  final List<String> availableSizes;
 
   Product({
+    this.availableSizes = const ['S', 'M', 'L', 'XL'],
+    
     required this.id,
     required this.name,
     required this.description,

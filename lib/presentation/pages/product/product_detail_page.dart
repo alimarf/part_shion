@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_landing_page/domain/models/product_model.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../domain/models/product_model.dart';
+import '../../../../domain/models/cart_item.dart';
+import '../../../../presentation/controllers/cart_controller.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -9,6 +13,8 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.find<CartController>();
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -17,6 +23,44 @@ class ProductDetailPage extends StatelessWidget {
         elevation: 0,
         foregroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                onPressed: () {
+                  Get.toNamed('/cart');
+                },
+              ),
+              Positioned(
+                right: 8,
+                top: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Obx(
+                    () => Text(
+                      '${cartController.itemCount}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -171,6 +215,12 @@ class ProductDetailPage extends StatelessWidget {
   }
 
   Widget _buildProductInfo() {
+    final cartController = Get.find<CartController>();
+    final isInCart = cartController.isInCart(product);
+    final quantityInCart = cartController.getProductQuantity(product);
+    final selectedSize = 'M'.obs;
+    final quantity = 1.obs;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -258,39 +308,187 @@ class ProductDetailPage extends StatelessWidget {
             ),
           ),
           
-          // Add to Cart Button
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: () {
-                // Add to cart functionality
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.shopping_cart_outlined, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    'ADD TO CART',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ],
-              ),
+          // Size Selector
+          const SizedBox(height: 16),
+          Text(
+            'Size',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[800],
             ),
           ),
+          const SizedBox(height: 8),
+          Obx(() => Row(
+            children: product.availableSizes.map((size) {
+              final isSelected = size == selectedSize.value;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ChoiceChip(
+                  label: Text(size),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) {
+                      selectedSize.value = size;
+                    }
+                  },
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  backgroundColor: Colors.grey[200],
+                  selectedColor: Colors.black,
+                  showCheckmark: false,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              );
+            }).toList(),
+          )),
+          
+          // Quantity Picker
+          const SizedBox(height: 16),
+          Text(
+            'Quantity',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Obx(() => Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove, size: 20, color: Colors.black),
+                  onPressed: quantity.value > 1
+                      ? () => quantity.value--
+                      : null,
+                ),
+                Container(
+                  width: 40,
+                  alignment: Alignment.center,
+                  child: Text(
+                    quantity.value.toString(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add, size: 20, color: Colors.black),
+                  onPressed: () => quantity.value++,
+                ),
+              ],
+            ),
+          )),
+          
+          // Add to Cart Button
+          const SizedBox(height: 24),
+          if (isInCart)
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      cartController.removeItem(CartItem(
+                        product: product,
+                        selectedSize: selectedSize.value,
+                      ));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      foregroundColor: Colors.black87,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text('Remove from Cart'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove, size: 20),
+                        onPressed: quantityInCart > 1
+                            ? () {
+                                cartController.updateQuantity(
+                                  product,
+                                  quantityInCart - 1,
+                                  size: selectedSize.value,
+                                );
+                              }
+                            : null,
+                      ),
+                      Text(
+                        quantityInCart.toString(),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add, size: 20),
+                        onPressed: () => cartController.updateQuantity(
+                          product,
+                          quantityInCart + 1,
+                          size: selectedSize.value,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          else
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  for (var i = 0; i < quantity.value; i++) {
+                    cartController.addItem(product, size: selectedSize.value);
+                  }
+                  // Reset quantity after adding to cart
+                  quantity.value = 1;
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.shopping_cart_outlined, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'ADD TO CART',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

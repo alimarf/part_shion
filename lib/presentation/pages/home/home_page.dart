@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
+import 'package:carousel_slider/carousel_controller.dart' as carousel;
 import 'package:flutter_landing_page/domain/models/product_model.dart';
 import 'package:flutter_landing_page/presentation/pages/product/product_detail_page.dart';
 
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  final CarouselController _carouselController = CarouselController();
+  final carousel.CarouselController _carouselController = carousel.CarouselController();
   int _currentIndex = 0;
   String _selectedCategory = 'Women'; // Track selected category
 
@@ -130,9 +130,9 @@ class _HomePageState extends State<HomePage> {
           child: Stack(
             children: [
               // Carousel Slider
-              CarouselSlider(
+              carousel_slider.CarouselSlider(
                 carouselController: _carouselController,
-                options: CarouselOptions(
+                options: carousel_slider.CarouselOptions(
                   height: 500,
                   viewportFraction: 1.0,
                   autoPlay: true,
@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: heroSlides.asMap().entries.map((entry) {
                     return GestureDetector(
-                      onTap: () => _carouselController.animateToPage(entry.key),
+                      onTap: () => _carouselController.jumpToPage(entry.key),
                       child: Container(
                         width: 8.0,
                         height: 8.0,

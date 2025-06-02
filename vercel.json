@@ -1,6 +1,32 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "build/web/**/*",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
+    {
+      "src": "/_next/static/(.*)",
+      "dest": "/_next/static/$1"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/main.dart.js",
+      "dest": "/main.dart.js"
+    },
+    {
+      "src": "/main.dart.js.map",
+      "dest": "/main.dart.js.map"
+    },
+    {
+      "src": "/main.dart.js_1.part.js",
+      "dest": "/main.dart.js_1.part.js"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.html"

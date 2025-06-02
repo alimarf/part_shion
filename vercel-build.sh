@@ -1,26 +1,32 @@
 #!/bin/bash
 
-# Install Flutter dependencies
+# Exit on error
+set -e
+
+echo "--- Installing Flutter dependencies ---"
 fvm flutter pub get
 
-# Build Flutter web app
+echo "--- Building Flutter web app ---"
+fvm flutter clean
 fvm flutter build web --release --web-renderer html
 
-# Create .vercel/output directory
+echo "--- Creating output directory ---"
 mkdir -p .vercel/output/static
 
-# Copy build output to Vercel's output directory
+# Copy build files to Vercel's output directory
+echo "--- Copying build files ---"
 cp -r build/web/* .vercel/output/static/
 
 # Create the config file for Vercel
+echo "--- Creating Vercel config ---"
 cat > .vercel/output/config.json <<EOL
 {
   "version": 3,
   "routes": [
-    {
-      "src": "^/(.*)",
-      "dest": "/static/index.html"
-    }
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }
 EOL
+
+echo "--- Build completed successfully! ---"
